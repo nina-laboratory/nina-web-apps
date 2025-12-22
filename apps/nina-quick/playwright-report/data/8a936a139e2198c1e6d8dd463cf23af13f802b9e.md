@@ -1,0 +1,53 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - navigation "Main" [ref=e3]:
+    - list [ref=e5]:
+      - listitem [ref=e6]:
+        - link "Home" [ref=e7] [cursor=pointer]:
+          - /url: /
+      - listitem [ref=e8]:
+        - button "Apps" [ref=e9]:
+          - text: Apps
+          - img [ref=e10]
+      - listitem [ref=e12]:
+        - link "Dev Setup" [ref=e13] [cursor=pointer]:
+          - /url: /dev-setup
+      - listitem [ref=e14]:
+        - link "Who is Nina" [ref=e15] [cursor=pointer]:
+          - /url: /who-is-nina
+  - main [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - heading "Who is Nina" [level=1] [ref=e19]
+        - img "Nina Laboratory Logo" [ref=e21]
+        - generic [ref=e22]:
+          - paragraph [ref=e23]: Hey, my name is nina and my goal is
+          - blockquote [ref=e24]: "\"Create environment for fast development, using multi agent setup\""
+      - generic [ref=e25]:
+        - heading "Full Story" [level=2] [ref=e26]
+        - paragraph [ref=e27]: Before Nina, development felt fragmented. We needed a unified system that could adapt, learn, and accelerate our workflow. Nina was born from this necessity—a digital laboratory where agents collaborate to solve complex problems faster than ever before. It's not just about automation; it's about creating a symbiotic environment where human creativity meets machine efficiency.
+      - generic [ref=e28]:
+        - heading "My Apps" [level=2] [ref=e29]
+        - generic [ref=e30]:
+          - generic [ref=e32]:
+            - generic [ref=e33]:
+              - img [ref=e35]
+              - generic [ref=e37]: Call Nina
+            - generic [ref=e39]: Voice interface for rapid interaction.
+          - generic [ref=e41]:
+            - generic [ref=e42]:
+              - img [ref=e44]
+              - generic [ref=e46]: Nina Controller
+            - generic [ref=e48]: Centralized control for your agent swarm.
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - img [ref=e53]
+              - generic [ref=e55]: Nina Fast
+            - generic [ref=e57]: High-performance processing unit.
+    - generic [ref=e58]: Nina Laboratory © 2025
+  - button "Open Next.js Dev Tools" [ref=e64] [cursor=pointer]:
+    - img [ref=e65]
+  - alert [ref=e68]
+```
