@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "bunx @biomejs/biome check --write .",
+    "check": "bun x tsc --noEmit && bun x @biomejs/biome check . --diagnostic-level=info",
+    "e2e": "bun x playwright test"
   },
   "dependencies": {
     "@nina/nina-core": "workspace:*",

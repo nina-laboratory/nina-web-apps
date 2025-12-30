@@ -1,9 +1,9 @@
 import {
   Button,
   Card,
+  CardContent,
   CardHeader,
   CardTitle,
-  CardContent,
 } from "@nina/ui-components";
 
 export default function Home() {

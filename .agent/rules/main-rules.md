@@ -1,6 +1,10 @@
-# Nina Labs Monorepo Documentation
+---
+trigger: always_on
+---
 
-This document serves as a guide for AI agents working on the **Nina Labs** monorepo. It outlines the project structure, tooling choices, and architectural conventions that **MUST** be followed to ensure consistency and correctness.
+# Nina Labs Web Apps Documentation
+
+This document serves as a guide for AI agents working on the **Nina Labs Web Apps** monorepo. It outlines the project structure, tooling choices, and architectural conventions that **MUST** be followed to ensure consistency and correctness.
 
 ## 1. Project Structure
 
