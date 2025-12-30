@@ -10,3 +10,7 @@ build
 test-results/
 playwright-report/
 blob-report/
+
+# PWA
+**/public/sw.js
+**/public/workbox-*.js
