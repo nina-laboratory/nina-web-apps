@@ -1,14 +1,15 @@
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  testDir: "./tests",
+  testDir: "./",
+  outputDir: "./test-results",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: "html",
+  reporter: [["html", { outputFolder: "./playwright-report" }]],
   use: {
-    baseURL: "http://localhost:3005",
+    baseURL: "http://localhost:3002",
     trace: "on-first-retry",
   },
   projects: [
@@ -18,8 +19,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "bun run dev --port 3005",
-    url: "http://localhost:3005",
+    command: "bun run dev --port 3002",
+    url: "http://localhost:3002",
     reuseExistingServer: !process.env.CI,
   },
 });

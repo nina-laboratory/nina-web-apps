@@ -9,6 +9,7 @@
       },
       "devDependencies": {
         "@biomejs/biome": "^2.3.10",
+        "@playwright/test": "^1.57.0",
         "typescript": "^5.9.3",
       },
     },
@@ -24,7 +25,6 @@
         "tailwindcss-animate": "^1.0.7",
       },
       "devDependencies": {
-        "@playwright/test": "^1.57.0",
         "@tailwindcss/postcss": "^4",
         "@types/node": "^20",
         "@types/react": "^19",
@@ -47,7 +47,6 @@
         "tailwindcss-animate": "^1.0.7",
       },
       "devDependencies": {
-        "@playwright/test": "^1.57.0",
         "@tailwindcss/postcss": "^4",
         "@types/node": "^20",
         "@types/react": "^19",
@@ -70,7 +69,6 @@
         "tailwindcss-animate": "^1.0.7",
       },
       "devDependencies": {
-        "@playwright/test": "^1.57.0",
         "@tailwindcss/postcss": "^4",
         "@types/node": "^20",
         "@types/react": "^19",

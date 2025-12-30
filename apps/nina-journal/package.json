@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "bunx @biomejs/biome check --write .",
     "check": "bun x tsc --noEmit && bun x @biomejs/biome check . --diagnostic-level=info",
-    "e2e": "bun x playwright test"
+    "e2e": "bun x playwright test -c tests/playwright.config.ts"
   },
   "dependencies": {
     "next": "16.1.0",
@@ -19,7 +19,6 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

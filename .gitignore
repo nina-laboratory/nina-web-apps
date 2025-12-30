@@ -5,3 +5,8 @@ node_modules
 dist
 build
 .next
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
