@@ -4,5 +4,9 @@
   "main": "src/index.ts",
   "devDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@azure/data-tables": "^13.3.2",
+    "@azure/identity": "^4.13.0"
   }
 }
