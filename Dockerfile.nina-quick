@@ -7,7 +7,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 COPY packages ./packages
 COPY apps/nina-fit/package.json ./apps/nina-fit/package.json
 COPY apps/nina-journal/package.json ./apps/nina-journal/package.json
@@ -32,7 +32,7 @@ RUN bun run build --filter=nina-quick
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -50,12 +50,12 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/apps/nina-quick/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/nina-quick/.next/static ./apps/nina-quick/.next/static
 
-USER nextjs
+# USER nextjs # Commented out to allow binding to privileged port 80
 
-EXPOSE 3000
+EXPOSE 80
 
-ENV PORT 3000
+ENV PORT=80
 # set hostname to localhost
-ENV HOSTNAME "0.0.0.0"
+ENV HOSTNAME="0.0.0.0"
 
 CMD ["bun", "apps/nina-quick/server.js"]
