@@ -10,6 +10,7 @@ import {
 import { format } from "date-fns";
 
 import Link from "next/link";
+import Markdown from "react-markdown";
 
 // Checking if Badge exists in ui-components later. For now I'll use a simple span with tailwind classes.
 
@@ -48,9 +49,38 @@ export function ReleaseCard({ release }: ReleaseCardProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground line-clamp-3">
-            {release.body.substring(0, 150)}...
-          </p>
+          <div className="text-sm text-muted-foreground line-clamp-3">
+            <Markdown
+              components={{
+                h1: ({ node, ...props }) => (
+                  <h3
+                    className="font-semibold text-foreground mt-2 mb-1"
+                    {...props}
+                  />
+                ),
+                h2: ({ node, ...props }) => (
+                  <h4
+                    className="font-medium text-foreground mt-2 mb-1"
+                    {...props}
+                  />
+                ),
+                p: ({ node, ...props }) => (
+                  <p className="text-muted-foreground mb-2" {...props} />
+                ),
+                a: ({ node, ...props }) => (
+                  <a className="text-primary hover:underline" {...props} />
+                ),
+                code: ({ node, ...props }) => (
+                  <code
+                    className="bg-muted px-1 rounded text-xs"
+                    {...props}
+                  />
+                ),
+              }}
+            >
+              {release.body}
+            </Markdown>
+          </div>
         </CardContent>
         <CardFooter>
           <span className="text-sm text-primary font-medium group-hover:underline decoration-primary/50 underline-offset-4">

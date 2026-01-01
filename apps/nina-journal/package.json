@@ -13,6 +13,7 @@
   "dependencies": {
     "@nina/nina-core": "workspace:*",
     "@nina/ui-components": "workspace:*",
+    "@tailwindcss/typography": "^0.5.19",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.562.0",
     "next": "16.1.0",

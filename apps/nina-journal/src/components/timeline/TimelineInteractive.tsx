@@ -4,7 +4,7 @@ import type { Release } from "@nina/nina-core";
 import { Button } from "@nina/ui-components";
 import { differenceInDays, endOfYear, startOfYear } from "date-fns";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TimelineNode } from "./TimelineNode";
 
 interface TimelineInteractiveProps {
@@ -78,14 +78,14 @@ export function TimelineInteractive({ releases }: TimelineInteractiveProps) {
     };
   }, [releases]);
 
-  const scrollToCurrent = () => {
+  const scrollToCurrent = useCallback(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo({
         left: scrollContainerRef.current.scrollWidth,
         behavior: "smooth",
       });
     }
-  };
+  }, []);
 
   // Check scroll position to toggle button visibility
   const handleScroll = () => {
@@ -100,15 +100,10 @@ export function TimelineInteractive({ releases }: TimelineInteractiveProps) {
   // Initial scroll to end on mount
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (scrollContainerRef.current) {
-        scrollContainerRef.current.scrollTo({
-          left: scrollContainerRef.current.scrollWidth,
-          behavior: "smooth",
-        });
-      }
+      scrollToCurrent();
     }, 100);
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [scrollToCurrent]);
 
   return (
     <div className="relative w-full">

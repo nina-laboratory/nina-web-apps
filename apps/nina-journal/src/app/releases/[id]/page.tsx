@@ -59,8 +59,65 @@ export default async function ReleasePage({ params }: ReleasePageProps) {
         </div>
       </header>
 
-      <article className="prose prose-neutral dark:prose-invert max-w-none">
-        <ReactMarkdown>{release.body}</ReactMarkdown>
+      <article>
+        <ReactMarkdown
+          components={{
+            h1: ({ node, ...props }) => (
+              <h1
+                className="text-3xl font-bold mt-8 mb-4 text-foreground"
+                {...props}
+              />
+            ),
+            h2: ({ node, ...props }) => (
+              <h2
+                className="text-2xl font-semibold mt-6 mb-3 text-foreground"
+                {...props}
+              />
+            ),
+            h3: ({ node, ...props }) => (
+              <h3
+                className="text-xl font-medium mt-4 mb-2 text-foreground"
+                {...props}
+              />
+            ),
+            p: ({ node, ...props }) => (
+              <p className="leading-7 mb-4 text-muted-foreground" {...props} />
+            ),
+            ul: ({ node, ...props }) => (
+              <ul
+                className="list-disc pl-6 mb-4 text-muted-foreground"
+                {...props}
+              />
+            ),
+            ol: ({ node, ...props }) => (
+              <ol
+                className="list-decimal pl-6 mb-4 text-muted-foreground"
+                {...props}
+              />
+            ),
+            li: ({ node, ...props }) => <li className="mb-1" {...props} />,
+            a: ({ node, ...props }) => (
+              <a
+                className="text-primary hover:underline underline-offset-4"
+                {...props}
+              />
+            ),
+            blockquote: ({ node, ...props }) => (
+              <blockquote
+                className="border-l-4 border-muted pl-4 italic text-muted-foreground"
+                {...props}
+              />
+            ),
+            code: ({ node, ...props }) => (
+              <code
+                className="bg-muted px-1.5 py-0.5 rounded font-mono text-sm text-foreground"
+                {...props}
+              />
+            ),
+          }}
+        >
+          {release.body}
+        </ReactMarkdown>
       </article>
     </div>
   );
