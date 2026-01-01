@@ -4,7 +4,7 @@ import type { Release } from "@nina/nina-core";
 import { Button } from "@nina/ui-components";
 import { differenceInDays, endOfYear, startOfYear } from "date-fns";
 import { ArrowRight } from "lucide-react";
-import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { TimelineNode } from "./TimelineNode";
 
 interface TimelineInteractiveProps {
@@ -24,7 +24,13 @@ export function TimelineInteractive({ releases }: TimelineInteractiveProps) {
 
   // Calculate layout metrics based on the year of the data
   const metrics = useMemo(() => {
-    if (releases.length === 0) return { width: MIN_WIDTH, positions: {} };
+    if (releases.length === 0)
+      return {
+        width: MIN_WIDTH,
+        positions: {} as Record<string, number>,
+        stackIndices: {} as Record<string, number>,
+        dateLabels: {} as Record<string, { position: number; date: Date }>,
+      };
 
     // Assume all releases are in the same year as the first one for now
     // or parse the year from search param if we had it.
@@ -36,15 +42,40 @@ export function TimelineInteractive({ releases }: TimelineInteractiveProps) {
 
     const totalWidth = Math.max(totalDays * PIXELS_PER_DAY, MIN_WIDTH);
 
-    // Map release ID to pixel position
+    // Map release ID to pixel position, stack index
     const positions: Record<string, number> = {};
+    const stackIndices: Record<string, number> = {};
+    const dateCounts: Record<string, number> = {};
+    const dateLabels: Record<string, { position: number; date: Date }> = {};
+
     releases.forEach((r) => {
       const days = differenceInDays(r.date, start);
-      // Add padding (e.g. 100px) so Jan 1st isn't glued to the edge
-      positions[r.id] = days * PIXELS_PER_DAY + 100;
+      // Increased padding to 300px
+      const basePos = days * PIXELS_PER_DAY + 300;
+      positions[r.id] = basePos;
+
+      // Track how many releases on this specific date (to stack them)
+      const dateKey = r.date.toISOString().split("T")[0];
+      const count = dateCounts[dateKey] || 0;
+
+      stackIndices[r.id] = count;
+      dateCounts[dateKey] = count + 1;
+
+      // Store date info for the FIRST item at this position
+      if (count === 0) {
+        dateLabels[dateKey] = { position: basePos, date: r.date };
+      }
     });
 
-    return { width: totalWidth + 200, positions }; // +200 for end padding
+    return {
+      width: totalWidth + 600,
+      positions: positions as Record<string, number>,
+      stackIndices: stackIndices as Record<string, number>,
+      dateLabels: dateLabels as Record<
+        string,
+        { position: number; date: Date }
+      >,
+    };
   }, [releases]);
 
   const scrollToCurrent = () => {
@@ -101,24 +132,49 @@ export function TimelineInteractive({ releases }: TimelineInteractiveProps) {
         onScroll={handleScroll}
         className="relative w-full overflow-x-auto overflow-y-visible py-24 px-0 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-transparent select-none cursor-grab active:cursor-grabbing"
       >
-        {/* Visual Timeline Wrapper */}
-        <div className="relative h-20" style={{ width: `${metrics.width}px` }}>
+        {/* Visual Timeline Wrapper - Adjusted height to prevent clipping of stacked items */}
+        <div className="relative h-64" style={{ width: `${metrics.width}px` }}>
           {/* Central Line */}
           <div className="absolute top-1/2 left-0 w-full h-0.5 bg-border -translate-y-1/2 z-0" />
 
-          {/* Nodes */}
-          {releases.map((release) => (
-            <div
-              key={release.id}
-              className="absolute top-1/2 -translate-y-1/2 z-10 transition-transform duration-300 hover:scale-110 -translate-x-1/2"
-              style={{ left: `${metrics.positions[release.id]}px` }}
-            >
-              <TimelineNode
-                release={release}
-                isCurrent={release.id === currentReleaseId}
-              />
-            </div>
-          ))}
+          {/* Date Labels (Below Axis) */}
+          {Object.entries(metrics.dateLabels || {}).map(
+            ([key, { position, date }]) => (
+              <div
+                key={key}
+                className="absolute top-1/2 -translate-x-1/2 text-center pt-8"
+                style={{ left: `${position}px` }}
+              >
+                <div className="text-sm font-mono text-muted-foreground whitespace-nowrap">
+                  {date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </div>
+              </div>
+            ),
+          )}
+
+          {/* Nodes (Stacked Upwards) */}
+          {releases.map((release) => {
+            const stackIndex = metrics.stackIndices?.[release.id] || 0;
+            // Stack upwards: bottom starts at 50%, margin-bottom adds spacing
+            return (
+              <div
+                key={release.id}
+                className="absolute bottom-1/2 z-10 transition-transform duration-300 hover:scale-110 -translate-x-1/2 pb-2"
+                style={{
+                  left: `${metrics.positions[release.id]}px`,
+                  marginBottom: `${stackIndex * 60}px`,
+                }}
+              >
+                <TimelineNode
+                  release={release}
+                  isCurrent={release.id === currentReleaseId}
+                />
+              </div>
+            );
+          })}
 
           {/* End arrow/cap */}
           <div className="absolute top-1/2 right-0 flex items-center text-muted-foreground -translate-y-1/2 pr-8">

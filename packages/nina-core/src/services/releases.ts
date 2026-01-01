@@ -50,14 +50,15 @@ export class ReleaseService {
   }
 
   async listReleases(year: string): Promise<Release[]> {
-    if (!this.client) return this.getMockData(year);
+    const client = this.client;
+    if (!client) return this.getMockData(year);
 
     const releases: Release[] = [];
 
     try {
       await this.ensureTableExists();
 
-      const entities = this.client.listEntities<ReleaseEntity>({
+      const entities = client.listEntities<ReleaseEntity>({
         queryOptions: { filter: `PartitionKey eq '${year}'` },
       });
 
@@ -72,7 +73,11 @@ export class ReleaseService {
       return this.getMockData(year);
     }
 
-    return releases.sort((a, b) => a.date.getTime() - b.date.getTime());
+    return releases.sort((a, b) => {
+      const dateDiff = a.date.getTime() - b.date.getTime();
+      if (dateDiff !== 0) return dateDiff;
+      return parseInt(a.id) - parseInt(b.id);
+    });
   }
 
   // Moved mock data to a helper method to keep listReleases clean
@@ -80,7 +85,7 @@ export class ReleaseService {
     if (year === "2026") {
       const mockReleases: Release[] = [
         {
-          id: "2026.12.25",
+          id: "6",
           year: "2026",
           title: "Holiday Special",
           date: new Date("2026-12-25"),
@@ -88,7 +93,7 @@ export class ReleaseService {
           body: "# Holiday Update\n\nSpecial holiday themes and quick actions added!",
         },
         {
-          id: "2026.11.15",
+          id: "5",
           year: "2026",
           title: "Performance Boost",
           date: new Date("2026-11-15"),
@@ -96,7 +101,15 @@ export class ReleaseService {
           body: "# Performance Update\n\nOptimized rendering for large journals.",
         },
         {
-          id: "2026.10.01",
+          id: "4",
+          year: "2026",
+          title: "Quick Fix",
+          date: new Date("2026-11-15"),
+          apps: ["nina-quick"],
+          body: "# Quick Fix\n\nHotfix for the previous release issues.",
+        },
+        {
+          id: "3",
           year: "2026",
           title: "Autumn Refresh",
           date: new Date("2026-10-01"),
@@ -104,7 +117,7 @@ export class ReleaseService {
           body: "# Autumn Refresh\n\nNew workout plans for the season.",
         },
         {
-          id: "2026.08.20",
+          id: "2",
           year: "2026",
           title: "Back to School",
           date: new Date("2026-08-20"),
@@ -112,15 +125,7 @@ export class ReleaseService {
           body: "# Back to School\n\nGet organized with new journal templates.",
         },
         {
-          id: "2026.05.05",
-          year: "2026",
-          title: "May Update",
-          date: new Date("2026-05-05"),
-          apps: ["nina-fit"],
-          body: "# May Update\n\nGetting ready for summer.",
-        },
-        {
-          id: "2026.01.01",
+          id: "1",
           year: "2026",
           title: "New Year Launch",
           date: new Date("2026-01-01"),
@@ -128,20 +133,25 @@ export class ReleaseService {
           body: "# New Year Launch\n\nInitial release of the 2026 suite.",
         },
       ];
-      return mockReleases.sort((a, b) => a.date.getTime() - b.date.getTime());
+      return mockReleases.sort((a, b) => {
+        const dateDiff = a.date.getTime() - b.date.getTime();
+        if (dateDiff !== 0) return dateDiff;
+        return parseInt(a.id) - parseInt(b.id);
+      });
     }
     return [];
   }
 
   async getRelease(year: string, id: string): Promise<Release | null> {
-    if (!this.client) {
+    const client = this.client;
+    if (!client) {
       // Check against mock data
       const releases = this.getMockData(year);
       return releases.find((r) => r.id === id) || null;
     }
     try {
       await this.ensureTableExists();
-      const entity = await this.client.getEntity<ReleaseEntity>(year, id);
+      const entity = await client.getEntity<ReleaseEntity>(year, id);
       return this.mapEntityToRelease(entity);
     } catch (e: any) {
       if (e.statusCode === 404) {

@@ -1,6 +1,6 @@
 import type { Release } from "@nina/nina-core";
 import { cn } from "@nina/ui-components";
-import { format } from "date-fns";
+
 import Link from "next/link";
 
 interface TimelineNodeProps {
@@ -15,11 +15,8 @@ export function TimelineNode({ release, isCurrent }: TimelineNodeProps) {
       {/* Date & Version Label (Top) */}
       <Link
         href={`/releases/${release.id}`}
-        className="mb-4 flex flex-col items-center opacity-70 group-hover:opacity-100 transition-opacity focus:outline-none"
+        className="mb-2 flex flex-col items-center opacity-70 group-hover:opacity-100 transition-opacity focus:outline-none"
       >
-        <span className="text-xs font-mono text-muted-foreground group-hover:text-primary transition-colors">
-          {format(release.date, "MMM dd")}
-        </span>
         <span className="text-[10px] font-bold tracking-wide uppercase text-primary/80">
           {release.id}
         </span>
