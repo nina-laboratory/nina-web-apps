@@ -80,12 +80,25 @@ export function TimelineInteractive({ releases }: TimelineInteractiveProps) {
 
   const scrollToCurrent = useCallback(() => {
     if (scrollContainerRef.current) {
+      let targetScrollLeft = scrollContainerRef.current.scrollWidth;
+
+      // If we have a current release, try to center it
+      if (
+        currentReleaseId &&
+        metrics.positions[currentReleaseId] !== undefined
+      ) {
+        const position = metrics.positions[currentReleaseId];
+        const containerWidth = scrollContainerRef.current.clientWidth;
+        // Center the release: position - half the container
+        targetScrollLeft = Math.max(0, position - containerWidth / 2);
+      }
+
       scrollContainerRef.current.scrollTo({
-        left: scrollContainerRef.current.scrollWidth,
+        left: targetScrollLeft,
         behavior: "smooth",
       });
     }
-  }, []);
+  }, [currentReleaseId, metrics.positions]);
 
   // Check scroll position to toggle button visibility
   const handleScroll = () => {
