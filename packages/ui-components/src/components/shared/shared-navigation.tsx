@@ -23,12 +23,14 @@ export interface SharedNavigationProps {
   items: NavigationItem[];
   logo?: React.ReactNode;
   className?: string;
+  version?: string;
 }
 
 export function SharedNavigation({
   items,
   logo,
   className,
+  version,
 }: SharedNavigationProps) {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -96,7 +98,17 @@ export function SharedNavigation({
                 <span>{item.label}</span>
               </a>
             ))}
+            {version && (
+                <div className="px-2 py-2 text-xs text-muted-foreground">
+                    Version: {version}
+                </div>
+            )}
           </div>
+        </div>
+      )}
+      {version && (
+        <div className="hidden md:block ml-auto mr-4 text-xs text-muted-foreground">
+            v{version}
         </div>
       )}
     </div>
