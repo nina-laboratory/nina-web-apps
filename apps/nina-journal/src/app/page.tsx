@@ -18,7 +18,7 @@ export default function Home() {
             Nina Journal
           </h1>
           <p className="text-xl text-muted-foreground">
-            Track the evolution of the Nina Labs ecosystem.
+            Track the evolution of all data revolving around all apps from Nina Labs.
           </p>
         </div>
 
@@ -45,9 +45,9 @@ export default function Home() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Documentation</CardTitle>
+              <CardTitle>Fitness</CardTitle>
               <CardDescription>
-                Learn more about the Nina Labs architecture.
+                Evoulution of my fitness journey.
               </CardDescription>
             </CardHeader>
             <CardContent>
