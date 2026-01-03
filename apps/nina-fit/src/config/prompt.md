@@ -1,0 +1,1 @@
+Minimalist flat vector icon, clean lines, single color (dark grey or black) on SOLID WHITE background, simple fitness illustration of a person doing [EXERCISE_NAME], modern app style. Side view. Do NOT include a transparency grid or checkerboard pattern.

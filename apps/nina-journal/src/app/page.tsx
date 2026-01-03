@@ -18,7 +18,8 @@ export default function Home() {
             Nina Journal
           </h1>
           <p className="text-xl text-muted-foreground">
-            Track the evolution of all data revolving around all apps from Nina Labs.
+            Track the evolution of all data revolving around all apps from Nina
+            Labs.
           </p>
         </div>
 

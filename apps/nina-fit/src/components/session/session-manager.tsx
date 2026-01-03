@@ -3,6 +3,7 @@
 import type { ExerciseRecord, Session } from "@nina/nina-core";
 import { Button, Card, CardContent } from "@nina/ui-components";
 import { ChevronLeft, Edit2, Plus, Save, Trash2 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { saveMySession } from "../../app/actions";
@@ -23,20 +24,24 @@ export function SessionManager({ initialSession }: SessionManagerProps) {
   );
   const [editingRecordId, setEditingRecordId] = useState<string | null>(null);
   const [currentValue, setCurrentValue] = useState<number>(0);
+  const [currentWeight, setCurrentWeight] = useState<number>(0);
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
 
   const currentExerciseDef = EXERCISES.find((e) => e.id === selectedExerciseId);
 
   const handleExerciseSelect = (exerciseId: string) => {
+    const exerciseDef = EXERCISES.find((e) => e.id === exerciseId);
     setSelectedExerciseId(exerciseId);
     setCurrentValue(0);
+    setCurrentWeight(exerciseDef?.defaultWeight || 0);
     setView("record-exercise");
   };
 
   const handleEditRecord = (record: ExerciseRecord) => {
     setSelectedExerciseId(record.exerciseId);
     setCurrentValue(record.value);
+    setCurrentWeight(record.weight || 0);
     setEditingRecordId(record.id);
     setView("record-exercise");
   };
@@ -55,6 +60,10 @@ export function SessionManager({ initialSession }: SessionManagerProps) {
       exerciseId: selectedExerciseId,
       type: currentExerciseDef.inputType,
       value: currentValue,
+      weight:
+        currentExerciseDef.inputType === "reps-weight"
+          ? currentWeight
+          : undefined,
       timestamp: new Date().toISOString(),
     };
 
@@ -112,16 +121,17 @@ export function SessionManager({ initialSession }: SessionManagerProps) {
             >
               <CardContent className="p-4 flex flex-col items-center justify-center text-center h-40 space-y-2">
                 {exercise.image && (
-                   <div className="relative w-16 h-16 opacity-80">
-                      {/* Using standard img for now to simplify usage if Next.js Image needs config, 
+                  <div className="relative w-16 h-16 opacity-80">
+                    {/* Using standard img for now to simplify usage if Next.js Image needs config, 
                           but typically just <img /> works fine for local assets in public folder.
                           Actually, using Next Image is better. */}
-                      <img 
-                        src={exercise.image} 
-                        alt={exercise.label} 
-                        className="w-full h-full object-contain" 
-                      />
-                   </div>
+                    <Image
+                      src={exercise.image}
+                      alt={exercise.label}
+                      className="object-contain"
+                      fill
+                    />
+                  </div>
                 )}
                 <span className="font-semibold text-sm">{exercise.label}</span>
               </CardContent>
@@ -152,10 +162,26 @@ export function SessionManager({ initialSession }: SessionManagerProps) {
         </div>
 
         <div className="flex flex-col items-center space-y-8">
-          {currentExerciseDef.inputType === "reps" && (
+          {(currentExerciseDef.inputType === "reps" ||
+            currentExerciseDef.inputType === "reps-weight") && (
             <div className="w-full space-y-6">
-              <div className="text-6xl font-bold text-center">
-                {currentValue}
+              <div className="flex justify-center items-center gap-8">
+                <div className="text-center">
+                  <div className="text-sm text-muted-foreground uppercase tracking-wider mb-1">
+                    Reps
+                  </div>
+                  <div className="text-6xl font-bold">{currentValue}</div>
+                </div>
+                {currentExerciseDef.inputType === "reps-weight" && (
+                  <div className="text-center">
+                    <div className="text-sm text-muted-foreground uppercase tracking-wider mb-1">
+                      Weight
+                    </div>
+                    <div className="text-6xl font-bold text-blue-500">
+                      {currentWeight}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -166,37 +192,103 @@ export function SessionManager({ initialSession }: SessionManagerProps) {
                     size="lg"
                     onClick={() => setCurrentValue(val)}
                   >
-                    {val}
+                    {val} Reps
                   </Button>
                 ))}
               </div>
+
               <div className="flex justify-center gap-4">
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() =>
-                    setCurrentValue((prev) => Math.max(0, prev - 1))
-                  }
+                  onClick={() => setCurrentValue((p) => Math.max(0, p - 1))}
                 >
                   <MinusIcon />
                 </Button>
+                <div className="flex items-center font-bold w-20 justify-center">
+                  Reps
+                </div>
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => setCurrentValue((prev) => prev + 1)}
+                  onClick={() => setCurrentValue((p) => p + 1)}
                 >
                   <PlusIcon />
                 </Button>
               </div>
+
+              {currentExerciseDef.inputType === "reps-weight" && (
+                <div className="flex justify-center gap-4 border-t pt-4">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setCurrentWeight((p) => Math.max(0, p - 5))}
+                  >
+                    <MinusIcon />
+                  </Button>
+                  <div className="flex items-center font-bold w-20 justify-center">
+                    Weight
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setCurrentWeight((p) => p + 5)}
+                  >
+                    <PlusIcon />
+                  </Button>
+                </div>
+              )}
             </div>
           )}
 
           {currentExerciseDef.inputType === "time" && (
-            <div className="w-full">
-              <Timer
-                initialSeconds={currentValue}
-                onTimeChange={setCurrentValue}
-              />
+            <div className="w-full space-y-6">
+              {currentExerciseDef.timeUnit === "minutes" ? (
+                <div className="w-full space-y-6">
+                  <div className="text-center">
+                    <div className="text-sm text-muted-foreground uppercase tracking-wider mb-1">
+                      Minutes
+                    </div>
+                    <div className="text-6xl font-bold">{currentValue}</div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    {currentExerciseDef.defaultValues?.map((val) => (
+                      <Button
+                        key={val}
+                        variant="outline"
+                        size="lg"
+                        onClick={() => setCurrentValue(val)}
+                      >
+                        {val} Min
+                      </Button>
+                    ))}
+                  </div>
+                  <div className="flex justify-center gap-4">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setCurrentValue((p) => Math.max(0, p - 1))}
+                    >
+                      <MinusIcon />
+                    </Button>
+                    <div className="flex items-center font-bold w-20 justify-center">
+                      Min
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setCurrentValue((p) => p + 1)}
+                    >
+                      <PlusIcon />
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Timer
+                  initialSeconds={currentValue}
+                  onTimeChange={setCurrentValue}
+                />
+              )}
             </div>
           )}
 
@@ -223,9 +315,9 @@ export function SessionManager({ initialSession }: SessionManagerProps) {
         </span>
       </div>
 
-      <div className="flex overflow-x-auto gap-4 pb-4 snap-x">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 pb-24">
         {session.exercises.length === 0 && (
-          <div className="text-muted-foreground w-full text-center py-8 border rounded-lg border-dashed">
+          <div className="col-span-full text-muted-foreground w-full text-center py-8 border rounded-lg border-dashed">
             No exercises recorded yet.
           </div>
         )}
@@ -235,35 +327,62 @@ export function SessionManager({ initialSession }: SessionManagerProps) {
           .map((record) => {
             // Most recent first
             const def = EXERCISES.find((e) => e.id === record.exerciseId);
+            const isWeight = record.type === "reps-weight";
+
             return (
-              <Card key={record.id} className="min-w-[160px] snap-center">
-                <CardContent className="p-4 space-y-4">
-                  <div className="font-semibold">
-                    {def?.label || record.exerciseId}
+              <Card key={record.id} className="relative overflow-hidden group">
+                <CardContent className="p-3 flex flex-col justify-between h-full min-h-[140px]">
+                  <div className="w-full relative">
+                    <div className="font-semibold text-sm leading-tight line-clamp-2 pr-6">
+                      {def?.label || record.exerciseId}
+                    </div>
+                    {/* Edit/Delete Overlay or mini buttons */}
+                    <div className="absolute -top-1 -right-1 flex gap-0 bg-background/80 backdrop-blur-sm rounded-bl-lg opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => handleEditRecord(record)}
+                      >
+                        <Edit2 className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 text-destructive"
+                        onClick={() => handleDeleteRecord(record.id)}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="text-4xl font-bold">
-                    {record.type === "time"
-                      ? formatDuration(record.value)
-                      : `${record.value}`}
-                  </div>
-                  
-                  <div className="flex gap-4 mt-4">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-10 w-10"
-                      onClick={() => handleEditRecord(record)}
-                    >
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-10 w-10 text-destructive hover:text-destructive"
-                      onClick={() => handleDeleteRecord(record.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+
+                  <div className="flex flex-col items-center justify-center flex-1 my-2">
+                    <div className="text-3xl font-bold tracking-tight">
+                      {record.type === "time"
+                        ? def?.timeUnit === "minutes"
+                          ? `${record.value}m`
+                          : formatDuration(record.value)
+                        : `${record.value}`}
+                    </div>
+                    <div className="text-xs text-muted-foreground uppercase font-medium">
+                      {record.type === "time"
+                        ? def?.timeUnit === "minutes"
+                          ? "Minutes"
+                          : "Duration"
+                        : "Reps"}
+                    </div>
+
+                    {isWeight && record.weight !== undefined && (
+                      <div className="mt-2 flex flex-col items-center">
+                        <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
+                          {record.weight}
+                        </div>
+                        <div className="text-[10px] text-muted-foreground uppercase font-medium">
+                          kg
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -271,13 +390,15 @@ export function SessionManager({ initialSession }: SessionManagerProps) {
           })}
       </div>
 
-      <Button
-        size="lg"
-        className="w-full"
-        onClick={() => setView("select-exercise")}
-      >
-        <Plus className="mr-2 h-6 w-6" /> Add Exercise
-      </Button>
+      <div className="fixed bottom-6 left-0 right-0 px-4 flex justify-center z-10 pointer-events-none">
+        <Button
+          size="lg"
+          className="shadow-xl w-full max-w-md pointer-events-auto"
+          onClick={() => setView("select-exercise")}
+        >
+          <Plus className="mr-2 h-6 w-6" /> Add Exercise
+        </Button>
+      </div>
     </div>
   );
 }

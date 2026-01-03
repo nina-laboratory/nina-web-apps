@@ -4,8 +4,10 @@ import { DefaultAzureCredential } from "@azure/identity";
 export interface ExerciseRecord {
     id: string;
     exerciseId: string; // e.g., "pushups", "plank"
-    type: "reps" | "time" | "custom";
-    value: number; // reps count or seconds
+    type: "reps" | "time" | "reps-weight" | "custom";
+    value: number; // reps count or seconds OR minutes
+    weight?: number; // weight in kg/lbs
+
     timestamp: string;
 }
 

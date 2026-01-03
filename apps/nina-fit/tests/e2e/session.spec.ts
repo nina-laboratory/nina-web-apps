@@ -15,7 +15,7 @@ test.describe("Fitness Session Flow", () => {
     // 3. Should be on session page
     await expect(page.getByText("Total Exercises"))
       .toBeVisible({ timeout: 10000 })
-      .catch(() => { });
+      .catch(() => {});
     // Or check for "Add Exercise" button
     await expect(
       page.getByRole("button", { name: "Add Exercise" }),

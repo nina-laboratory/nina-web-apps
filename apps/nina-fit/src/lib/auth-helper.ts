@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./auth";
 
 export async function getAuthSession() {
-  console.log("MOCK_AUTH value:", process.env.MOCK_AUTH);
   if (process.env.MOCK_AUTH === "true") {
     return {
       user: {

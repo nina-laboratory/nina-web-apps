@@ -8,3 +8,4 @@ Nina Journal is a online journal application for the Nina Labs suite. It consoli
 - Created base application
 - Created docker image
 - Initial Timeline Feature
+- Fixed lint formatting issues

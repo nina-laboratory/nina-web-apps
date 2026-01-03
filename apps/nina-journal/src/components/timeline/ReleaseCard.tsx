@@ -71,10 +71,7 @@ export function ReleaseCard({ release }: ReleaseCardProps) {
                   <a className="text-primary hover:underline" {...props} />
                 ),
                 code: ({ node, ...props }) => (
-                  <code
-                    className="bg-muted px-1 rounded text-xs"
-                    {...props}
-                  />
+                  <code className="bg-muted px-1 rounded text-xs" {...props} />
                 ),
               }}
             >
