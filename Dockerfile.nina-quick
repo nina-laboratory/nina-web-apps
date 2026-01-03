@@ -27,7 +27,8 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/apps/nina-quick/public ./public
+COPY --from=builder /app/apps/nina-quick/public ./apps/nina-quick/public
+COPY --from=builder /app/apps/nina-quick/version.txt ./version.txt
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
