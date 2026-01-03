@@ -92,4 +92,12 @@ export const EXERCISES: ExerciseDefinition[] = [
     timeUnit: "minutes",
     image: "/exercises/running.png",
   },
+  {
+    id: "shoulder-press",
+    label: "Shoulder Press",
+    inputType: "reps-weight",
+    defaultValues: [8, 10, 12],
+    defaultWeight: 10,
+    image: "/exercises/shoulder-press.png",
+  },
 ];

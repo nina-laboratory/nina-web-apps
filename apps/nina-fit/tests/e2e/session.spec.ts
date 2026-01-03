@@ -29,13 +29,21 @@ test.describe("Fitness Session Flow", () => {
 
     // 6. Record 10 reps
     await page.click('button:text("10")');
+
+    // Increase sets to 2
+    // Find the button that follows the "Sets" label
+    const setPlusBtn = page.locator("div").filter({ hasText: /^Sets$/ }).locator("xpath=following-sibling::button");
+    await setPlusBtn.click();
+
     await page.click('text="Save Record"');
 
     // 7. Verify it appears in list
     await expect(page.getByText("1 Exercises")).toBeVisible();
     await expect(page.getByText("Pushups")).toBeVisible();
     // Check for the value visually style
-    await expect(page.locator(".text-4xl")).toHaveText("10");
+    const valueText = page.locator(".text-3xl");
+    await expect(valueText).toContainText("2x");
+    await expect(valueText).toContainText("10");
 
     // 8. Go back to dashboard (click logo or Home nav)
     await page.click('text="Home"');

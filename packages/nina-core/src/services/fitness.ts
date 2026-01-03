@@ -7,6 +7,7 @@ export interface ExerciseRecord {
     type: "reps" | "time" | "reps-weight" | "custom";
     value: number; // reps count or seconds OR minutes
     weight?: number; // weight in kg/lbs
+    multiplier?: number; // e.g. 3x 10 reps
 
     timestamp: string;
 }

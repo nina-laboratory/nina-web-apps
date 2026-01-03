@@ -19,7 +19,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "bun run dev --port 4002",
+    command: "MOCK_AUTH=true MOCK_DB=true bun run dev --port 4002",
     url: "http://localhost:4002",
     reuseExistingServer: !process.env.CI,
   },
