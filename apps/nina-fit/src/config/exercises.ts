@@ -1,4 +1,9 @@
-export type ExerciseInputType = "reps" | "time" | "reps-weight" | "time-distance" | "custom";
+export type ExerciseInputType =
+  | "reps"
+  | "time"
+  | "reps-weight"
+  | "time-distance"
+  | "custom";
 
 export interface ExerciseDefinition {
   id: string;

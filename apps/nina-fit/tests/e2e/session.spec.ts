@@ -32,7 +32,10 @@ test.describe("Fitness Session Flow", () => {
 
     // Increase sets to 2
     // Find the button that follows the "Sets" label
-    const setPlusBtn = page.locator("div").filter({ hasText: /^Sets$/ }).locator("xpath=following-sibling::button");
+    const setPlusBtn = page
+      .locator("div")
+      .filter({ hasText: /^Sets$/ })
+      .locator("xpath=following-sibling::button");
     await setPlusBtn.click();
 
     await page.click('text="Save Record"');
@@ -48,7 +51,7 @@ test.describe("Fitness Session Flow", () => {
     // Add Running Exercise (Time & Distance)
     await page.click('text="Add Exercise"');
     await page.click('text="Running"');
-    
+
     // Select 5km Preset (assuming it's available)
     await page.click('button:text("5 km")');
     // Select 20 min Preset
@@ -64,11 +67,14 @@ test.describe("Fitness Session Flow", () => {
     // Add Planks (Sets + Time)
     await page.click('text="Add Exercise"');
     await page.click('text="Planks"');
-    
+
     // Select 30s Preset
     await page.click('button:text("30s")');
     // Increase Sets to 3
-    const planksSetPlusBtn = page.locator("div").filter({ hasText: /^1 Sets$/ }).locator("xpath=following-sibling::button");
+    const planksSetPlusBtn = page
+      .locator("div")
+      .filter({ hasText: /^1 Sets$/ })
+      .locator("xpath=following-sibling::button");
     await planksSetPlusBtn.click();
     await planksSetPlusBtn.click();
 
