@@ -15,3 +15,6 @@
 - Added "Multiplier/Sets" feature to log multiple sets at once (e.g., 2x 10)
 - Improved UI: Centered exercise cards, removed delete confirmation for faster interaction
 - Added "Shoulder Press" exercise (reps + weight) with custom icon
+- **Running**: Added Distance (km) and simplified Minutes input with presets
+- **Planks**: Added Sets multiplier and time presets (15s, 30s, 45s, 60s)
+- **UX**: Refactored Record Edit flow (click to edit) and moved Delete action to edit view

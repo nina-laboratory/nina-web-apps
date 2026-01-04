@@ -8,6 +8,7 @@ export interface ExerciseRecord {
     value: number; // reps count or seconds OR minutes
     weight?: number; // weight in kg/lbs
     multiplier?: number; // e.g. 3x 10 reps
+    distance?: number; // distance in km
 
     timestamp: string;
 }

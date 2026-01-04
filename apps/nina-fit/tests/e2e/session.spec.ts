@@ -45,6 +45,41 @@ test.describe("Fitness Session Flow", () => {
     await expect(valueText).toContainText("2x");
     await expect(valueText).toContainText("10");
 
+    // Add Running Exercise (Time & Distance)
+    await page.click('text="Add Exercise"');
+    await page.click('text="Running"');
+    
+    // Select 5km Preset (assuming it's available)
+    await page.click('button:text("5 km")');
+    // Select 20 min Preset
+    await page.click('button:text("20 Min")');
+
+    await page.click('text="Save Record"');
+
+    // Verify Running Record
+    await expect(page.getByText("2 Exercises")).toBeVisible(); // Total count
+    await expect(page.getByText("5 km")).toBeVisible();
+    await expect(page.getByText("20m")).toBeVisible();
+
+    // Add Planks (Sets + Time)
+    await page.click('text="Add Exercise"');
+    await page.click('text="Planks"');
+    
+    // Select 30s Preset
+    await page.click('button:text("30s")');
+    // Increase Sets to 3
+    const planksSetPlusBtn = page.locator("div").filter({ hasText: /^1 Sets$/ }).locator("xpath=following-sibling::button");
+    await planksSetPlusBtn.click();
+    await planksSetPlusBtn.click();
+
+    await page.click('text="Save Record"');
+
+    // Verify Planks Record
+    await expect(page.getByText("3 Exercises")).toBeVisible();
+    await expect(page.getByText("Planks")).toBeVisible();
+    await expect(page.getByText("3x")).toBeVisible();
+    await expect(page.getByText("00:30")).toBeVisible();
+
     // 8. Go back to dashboard (click logo or Home nav)
     await page.click('text="Home"');
 

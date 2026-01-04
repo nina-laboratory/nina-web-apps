@@ -1,4 +1,4 @@
-export type ExerciseInputType = "reps" | "time" | "reps-weight" | "custom";
+export type ExerciseInputType = "reps" | "time" | "reps-weight" | "time-distance" | "custom";
 
 export interface ExerciseDefinition {
   id: string;
@@ -6,6 +6,7 @@ export interface ExerciseDefinition {
   inputType: ExerciseInputType;
   defaultValues?: number[]; // For quick select buttons, e.g. [5, 10, 15] for reps
   defaultWeight?: number; // Default weight for reps-weight exercises
+  defaultDistances?: number[]; // Default distances for time-distance exercises
   timeUnit?: "seconds" | "minutes"; // For time exercises, defaults to seconds
   image?: string;
 }
@@ -58,7 +59,7 @@ export const EXERCISES: ExerciseDefinition[] = [
     id: "calf-raises",
     label: "Calf Raises",
     inputType: "reps",
-    defaultValues: [10, 15, 20, 30],
+    defaultValues: [30, 40, 50],
     image: "/exercises/calf-raises.png",
   },
   {
@@ -87,8 +88,9 @@ export const EXERCISES: ExerciseDefinition[] = [
   {
     id: "running",
     label: "Running",
-    inputType: "time",
-    defaultValues: [10, 15, 20, 30],
+    inputType: "time-distance",
+    defaultValues: [25, 30], // Time presets
+    defaultDistances: [3, 4, 5], // Distance presets (km)
     timeUnit: "minutes",
     image: "/exercises/running.png",
   },
